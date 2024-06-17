@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-py"
+  recursive_type_depth = 5
+  output = "prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  date      String
+  name      String   @db.VarChar(255)
+  talks     String[]
+  dist      String[]
+  local     String
+  author    User     @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model User {
+  id     String  @id @default(uuid())
+  email  String  @unique
+  name   String?
+  events Event[]
+}
