@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from typing import List, TypedDict
 
+
 class EventProps(TypedDict):
     userId: str
     name: str
@@ -9,6 +10,7 @@ class EventProps(TypedDict):
     talks: List[str]
     dist: List[str]
     local: str
+
 
 class Event:
     def __init__(self, event_props: EventProps):
@@ -55,3 +57,14 @@ class Event:
     @property
     def userId(self):
         return self.__userId
+
+    def get_event(self):
+        return {
+            "id": self.id,
+            "userId": self.userId,
+            "name": self.name,
+            "date":self.date,
+            "talks": self.talks,
+            "dist" : self.dist,
+            "local": self.local  
+        }

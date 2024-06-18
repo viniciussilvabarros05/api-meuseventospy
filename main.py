@@ -3,18 +3,22 @@ from src.infra.persistence.eventsRepositoryDatabase import EventRepositoryDataba
 from src.infra.persistence.userRepositoryDatabase import UserRepositoryDatabase
 from src.app.getAllEventsUsecase import GetAllEventsUseCase
 from src.app.createUserUsecase import CreateUserUsecase
+from src.app.createEventUsecase import CreateEventUsecase
 from src.core.entity.user import User
+from src.core.entity.event import Event
 from prisma import Prisma
 import asyncio
 
 app = Flask(__name__)
 db = Prisma()
-
+EventDatabase = EventRepositoryDatabase(db.event)
+UserDatabase = UserRepositoryDatabase(db.user)
 
 events = [
     {"id": 1, "name": "Event 1"},
     {"id": 2, "name": "Event 2"},
 ]
+
 
 @app.route('/user', methods=['POST'])
 def create_user():
@@ -22,20 +26,20 @@ def create_user():
     email = new_user.get('email')
     name = new_user.get('name')
     user = User(email, name)
-    repo = UserRepositoryDatabase(db)
-    result = asyncio.run(CreateUserUsecase(repo).execute(user))
-    
+    result = asyncio.run(CreateUserUsecase(UserDatabase).execute(user))
+
+    if len(result) > 0:
+        return jsonify(result), 400
     return jsonify(result), 200
 
 
-
 @app.route('/events/<string:id>', methods=['GET'])
-def get_events(id:str):
-    repo = EventRepositoryDatabase(db)
-    events3 = asyncio.run(GetAllEventsUseCase(repo).execute(id))
+def get_events(id: str):
+    events3 = asyncio.run(GetAllEventsUseCase(EventDatabase).execute(id))
     return jsonify(events3), 200
 
-@app.route('/events/<string:id>', methods=['GET'])
+
+@app.route('/event/<string:id>', methods=['GET'])
 def get_event(id: str):
     event = next((event for event in events if event["id"] == id), None)
     if event:
@@ -43,15 +47,19 @@ def get_event(id: str):
     return jsonify({"error": "Event not found"}), 404
 
 
-@app.route('/events', methods=['POST'])
+@app.route('/event', methods=['POST'])
 def create_event():
     new_event = request.get_json()
-    new_event["id"] = len(events) + 1
-    events.append(new_event)
-    return jsonify(new_event), 201
+    event = Event(new_event)
+    result = asyncio.run(CreateEventUsecase(EventDatabase).execute(event))
 
 
-@app.route('/events/<string:id>', methods=['PATCH'])
+    if 'error' in result:
+        return jsonify(result), 400
+    return jsonify(result), 201
+
+
+@app.route('/event/<string:id>', methods=['PATCH'])
 def update_event(id: str):
     event = next((event for event in events if event["id"] == id), None)
     if event:
@@ -61,7 +69,7 @@ def update_event(id: str):
     return jsonify({"error": "Event not found"}), 404
 
 
-@app.route('/events/<string:id>', methods=['DELETE'])
+@app.route('/event/<string:id>', methods=['DELETE'])
 def delete_event(id: str):
     global events
     events = [event for event in events if event["id"] != id]

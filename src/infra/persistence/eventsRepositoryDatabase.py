@@ -1,36 +1,42 @@
 from src.core.repository.ieventsRepository import IEventsRepository
 from typing import List
 from prisma import Prisma
-from prisma.models import Event
-
+from prisma.actions import EventActions
+from prisma.errors import MissingRequiredValueError
+from src.core.entity.event import Event
 
 
 class EventRepositoryDatabase(IEventsRepository):
 
-    def __init__(self, repository: Prisma):
+    def __init__(self, repository: EventActions):
         self.__repository = repository
 
     async def create(self, event: Event):
         try:
-            return self.__repository.create(data=event)
-        except e:
+            self.__repository.create(data=event.get_event())
+            return {
+            "status": 200
+            }
+        except ValueError as e:
             return {"error": "Evento não pode ser criado"}
-
+        except MissingRequiredValueError as e:
+            return {"error": str(e)}
+            
     async def findAll(self, id: str) -> List[Event]:
-        events = self.__repository.event.find_many(where={
+        events = self.__repository.find_many(where={
             "userId": id
         })
         return events
 
     async def getById(self, eventId: str, ) -> Event:
         try:
-            event = self.__repository.event.find_unique_or_raise(
+            event = self.__repository.find_unique_or_raise(
                 where={
                     "id": eventId
                 }
             )
             return event
-        except e:
+        except ValueError:
             return {"error": "Evento não encontrado"}
 
     async def update(self, event: Event) -> None:
@@ -41,7 +47,7 @@ class EventRepositoryDatabase(IEventsRepository):
                 },
                 data=event
             )
-        except e:
+        except ValueError:
             return {"error": "Evento não atualizado"}
 
     async def delete(self, eventId: str) -> None:
@@ -50,5 +56,5 @@ class EventRepositoryDatabase(IEventsRepository):
                 where={
                     'id': eventId,
                 })
-        except e:
+        except ValueError:
             return {"error": "Evento não encontrado"}
