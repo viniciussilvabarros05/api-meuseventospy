@@ -2,7 +2,7 @@ from core.repository.iuserRepository import IUserRepository
 from core.entity.user import User
 
 
-class EventRepositoryMemory(IUserRepository):
+class UserRepositoryDatabase(IUserRepository):
     def __init__(self, repository: IUserRepository):
         self.__repository = repository
 
