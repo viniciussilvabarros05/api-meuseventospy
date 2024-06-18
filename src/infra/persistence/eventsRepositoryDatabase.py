@@ -4,6 +4,7 @@ from prisma import Prisma
 from prisma.models import Event
 
 
+
 class EventRepositoryDatabase(IEventsRepository):
 
     def __init__(self, repository: Prisma):

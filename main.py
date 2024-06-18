@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from src.infra.persistence.eventsRepositoryDatabase import EventRepositoryDatabase
+from src.infra.persistence.userRepositoryDatabase import UserRepositoryDatabase
 from src.app.getAllEventsUsecase import GetAllEventsUseCase
+from src.app.createUserUsecase import CreateUserUsecase
+from src.core.entity.user import User
 from prisma import Prisma
 import asyncio
 
@@ -12,6 +15,18 @@ events = [
     {"id": 1, "name": "Event 1"},
     {"id": 2, "name": "Event 2"},
 ]
+
+@app.route('/user', methods=['POST'])
+def create_user():
+    new_user = request.get_json()
+    email = new_user.get('email')
+    name = new_user.get('name')
+    user = User(email, name)
+    repo = UserRepositoryDatabase(db)
+    result = asyncio.run(CreateUserUsecase(repo).execute(user))
+    
+    return jsonify(result), 200
+
 
 
 @app.route('/events/<string:id>', methods=['GET'])
