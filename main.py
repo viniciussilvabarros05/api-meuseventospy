@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify
 from src.infra.persistence.eventsRepositoryMemory import EventRepositoryMemory
-import sys
-import os
-
-# Adiciona o diretório raiz do projeto ao sys.path
-sys.path.append(("/src/core"))
+from src.app.getAllEventsUsecase import GetAllEventsUseCase
+from prisma.models import Event
+from prisma import Prisma
+import asyncio
 
 app = Flask(__name__)
 
@@ -15,10 +14,16 @@ events = [
     {"id": 2, "name": "Event 2"},
 ]
 
+
+
 @app.route('/events', methods=['GET'])
 def get_events():
-    events = EventRepositoryMemory.findAll()
-    return jsonify(events), 200
+    db = Prisma()
+    db.connect()
+    repo =EventRepositoryMemory(db.event)
+    events3 =  asyncio.run(GetAllEventsUseCase(repo).execute())
+    db.disconnect()
+    return jsonify(events3), 200
 
 @app.route('/events/<string:id>', methods=['GET'])
 def get_event(id:str):
@@ -49,5 +54,8 @@ def delete_event(id:str):
     events = [event for event in events if event["id"] != id]
     return jsonify({"message": "Event deleted"}), 200
 
+
 if __name__ == '__main__':
-    app.run(port=3000, debug=True)
+   app.run(port=3000, debug=True)
+
+

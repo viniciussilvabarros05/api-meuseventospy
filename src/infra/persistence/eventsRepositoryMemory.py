@@ -1,18 +1,19 @@
 from src.core.repository.ieventsRepository import IEventsRepository
-from src.core.entity.event import Event
 from typing import List
-
+from prisma.models import Event
+from prisma import Prisma
 class EventRepositoryMemory(IEventsRepository):
-    repository: IEventsRepository
 
-    def __init__(self, repository: IEventsRepository):
+
+    def __init__(self, repository: Event):
         self.__repository = repository
 
+    
     async def create(self, event: Event):
         return await self.__repository.create(event)
 
     async def findAll(self) -> List[Event]:
-        return await self.__repository.findAll()
+        return self.__repository.find_many()
 
     async def getById(self, eventId: str, ) -> bool:
         return await self.__repository.getById(eventId)

@@ -4,20 +4,20 @@ from typing import List
 
 class IEventsRepository(ABC):
     @abstractmethod
-    async def create(self, event: Event) -> None:
+    async def create(event: Event) -> None:
         pass
 
     @abstractmethod
-    async def getById(self, eventId: str) -> Event:
+    async def getById(eventId: str) -> Event:
         pass
     @abstractmethod
-    async def findAll(self)-> List[Event]:
+    async def findAll()-> List[Event]:
         pass
     @abstractmethod
-    async def update(self,event:Event) -> None:
+    async def update(event:Event) -> None:
         pass
     
     @abstractmethod
-    async def delete(self, eventId:str) -> None:
+    async def delete(eventId:str) -> None:
         pass
 
