@@ -21,11 +21,12 @@ class EventRepositoryDatabase(IEventsRepository):
             return {"error": "Evento não pode ser criado"}
         except MissingRequiredValueError as e:
             return {"error": str(e)}
-            
-    async def findAll(self, id: str) -> List[Event]:
+
+    async def findAll(self, id: str) -> List:
         events = self.__repository.find_many(where={
             "userId": id
         })
+        print(events)
         return events
 
     async def getById(self, eventId: str, ) -> Event:

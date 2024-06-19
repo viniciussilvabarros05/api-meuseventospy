@@ -30,7 +30,14 @@ class UserRepositoryDatabase(IUserRepository):
             return {"error": str(e)}
 
     async def getById(self, id: str, ) -> User:
-        return self.__repository.getById(id)
+        return self.__repository.find_unique(
+            where={
+                'id': id,
+            },
+            include={
+                'event': True
+            }
+        )
 
     async def delete(self, id: str) -> None:
         return self.__repository.delete(id)

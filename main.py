@@ -35,8 +35,22 @@ def create_user():
 
 @app.route('/events/<string:id>', methods=['GET'])
 def get_events(id: str):
-    events3 = asyncio.run(GetAllEventsUseCase(EventDatabase).execute(id))
-    return jsonify(events3), 200
+    result = asyncio.run(GetAllEventsUseCase(EventDatabase).execute(id))
+    events = []
+    for result in result:
+        event = {
+            "id":result.id,
+            "createdAt":result.createdAt,
+            "date":result.date,
+            "name":result.name,
+            "talks":result.talks,
+            "dist":result.dist,
+            "local":result.local,
+            "author":result.author,
+            "userId":result.userId
+        }
+        events.append(event)
+    return jsonify(events), 200
 
 
 @app.route('/event/<string:id>', methods=['GET'])
