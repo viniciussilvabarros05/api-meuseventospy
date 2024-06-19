@@ -4,6 +4,7 @@ from src.infra.persistence.userRepositoryDatabase import UserRepositoryDatabase
 from src.app.getAllEventsUsecase import GetAllEventsUseCase
 from src.app.createUserUsecase import CreateUserUsecase
 from src.app.createEventUsecase import CreateEventUsecase
+from src.app.getEventByIdUsecase import GetEventByIdUseCase
 from src.core.entity.user import User
 from src.core.entity.event import Event
 from prisma import Prisma
@@ -36,28 +37,15 @@ def create_user():
 @app.route('/events/<string:id>', methods=['GET'])
 def get_events(id: str):
     result = asyncio.run(GetAllEventsUseCase(EventDatabase).execute(id))
-    events = []
-    for result in result:
-        event = {
-            "id":result.id,
-            "createdAt":result.createdAt,
-            "date":result.date,
-            "name":result.name,
-            "talks":result.talks,
-            "dist":result.dist,
-            "local":result.local,
-            "author":result.author,
-            "userId":result.userId
-        }
-        events.append(event)
+    events =  [event.__dict__ for event in result]
     return jsonify(events), 200
 
 
 @app.route('/event/<string:id>', methods=['GET'])
 def get_event(id: str):
-    event = next((event for event in events if event["id"] == id), None)
+    event = asyncio.run(GetEventByIdUseCase(EventDatabase).execute(id))
     if event:
-        return jsonify(event), 200
+        return jsonify(event.__dict__), 200
     return jsonify({"error": "Event not found"}), 404
 
 
