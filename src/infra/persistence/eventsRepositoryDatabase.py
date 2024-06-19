@@ -2,7 +2,7 @@ from src.core.repository.ieventsRepository import IEventsRepository
 from typing import List
 from prisma import Prisma
 from prisma.actions import EventActions
-from prisma.errors import MissingRequiredValueError
+from prisma.errors import MissingRequiredValueError, RecordNotFoundError
 from src.core.entity.event import Event
 
 
@@ -37,7 +37,7 @@ class EventRepositoryDatabase(IEventsRepository):
                 }
             )
             return event
-        except ValueError:
+        except RecordNotFoundError:
             return {"error": "Evento não encontrado"}
 
     async def update(self, event: Event) -> None:
@@ -51,11 +51,12 @@ class EventRepositoryDatabase(IEventsRepository):
         except ValueError:
             return {"error": "Evento não atualizado"}
 
-    async def delete(self, eventId: str) -> None:
+    async def delete(self, eventId: str) -> dict:
         try:
             self.__repository.delete(
                 where={
                     'id': eventId,
                 })
+            return {"status": True}
         except ValueError:
             return {"error": "Evento não encontrado"}

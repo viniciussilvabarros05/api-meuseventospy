@@ -5,6 +5,7 @@ from src.app.getAllEventsUsecase import GetAllEventsUseCase
 from src.app.createUserUsecase import CreateUserUsecase
 from src.app.createEventUsecase import CreateEventUsecase
 from src.app.getEventByIdUsecase import GetEventByIdUseCase
+from src.app.deleteEventUsecase import DeleteEventUseCase
 from src.core.entity.user import User
 from src.core.entity.event import Event
 from prisma import Prisma
@@ -43,10 +44,10 @@ def get_events(id: str):
 
 @app.route('/event/<string:id>', methods=['GET'])
 def get_event(id: str):
-    event = asyncio.run(GetEventByIdUseCase(EventDatabase).execute(id))
-    if event:
-        return jsonify(event.__dict__), 200
-    return jsonify({"error": "Event not found"}), 404
+    result = asyncio.run(GetEventByIdUseCase(EventDatabase).execute(id))
+    if 'error' in result:
+        return jsonify({"error": "Event not found"}), 404
+    return jsonify(result.__dict__), 200
 
 
 @app.route('/event', methods=['POST'])
@@ -73,9 +74,11 @@ def update_event(id: str):
 
 @app.route('/event/<string:id>', methods=['DELETE'])
 def delete_event(id: str):
-    global events
-    events = [event for event in events if event["id"] != id]
-    return jsonify({"message": "Event deleted"}), 200
+    result = asyncio.run(DeleteEventUseCase(EventDatabase).execute(id))
+    
+    if 'error' in result:
+        return jsonify({"error": "Event not found"}), 404
+    return jsonify({"status": True}), 200
 
 
 if __name__ == '__main__':
