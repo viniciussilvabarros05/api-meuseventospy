@@ -1,4 +1,5 @@
 from src.core.entity.event import Event
+from prisma.models import Event as EventDict
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -14,7 +15,7 @@ class IEventsRepository(ABC):
     async def findAll()-> List[Event]:
         pass
     @abstractmethod
-    async def update(event:Event) -> None:
+    async def update(event:EventDict.__dict__) -> dict:
         pass
     
     @abstractmethod

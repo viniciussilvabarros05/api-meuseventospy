@@ -1,9 +1,11 @@
-import uuid
+
 from datetime import datetime
 from typing import List, TypedDict
 
 
 class EventProps(TypedDict):
+    id: str
+    createdAt: datetime
     userId: str
     name: str
     date: str
@@ -14,17 +16,14 @@ class EventProps(TypedDict):
 
 class Event:
     def __init__(self, event_props: EventProps):
-        self.__id = str(uuid.uuid4())
+        self.__id = event_props.get('id') 
         self.__name = event_props.get('name')
         self.__date = event_props.get('date')
         self.__talks = event_props.get('talks', [])
         self.__dist = event_props.get('dist', [])
         self.__local = event_props.get('local')
-        self.__createdAt = datetime.now()
+        self.__createdAt = datetime.now() or event_props.get('__createdAt')
         self.__userId = event_props.get('userId')
-
-    def get_event(self):
-        return self
 
     @property
     def id(self):

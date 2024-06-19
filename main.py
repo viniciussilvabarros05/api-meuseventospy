@@ -6,10 +6,12 @@ from src.app.createUserUsecase import CreateUserUsecase
 from src.app.createEventUsecase import CreateEventUsecase
 from src.app.getEventByIdUsecase import GetEventByIdUseCase
 from src.app.deleteEventUsecase import DeleteEventUseCase
+from src.app.updateEventUsecase import UpdateEventUseCase
 from src.core.entity.user import User
 from src.core.entity.event import Event
 from prisma import Prisma
 import asyncio
+import uuid
 
 app = Flask(__name__)
 db = Prisma()
@@ -27,7 +29,8 @@ def create_user():
     new_user = request.get_json()
     email = new_user.get('email')
     name = new_user.get('name')
-    user = User(email, name)
+    id = str(uuid.uuid4())
+    user = User(id,email, name)
     result = asyncio.run(CreateUserUsecase(UserDatabase).execute(user))
 
     if len(result) > 0:
@@ -53,6 +56,7 @@ def get_event(id: str):
 @app.route('/event', methods=['POST'])
 def create_event():
     new_event = request.get_json()
+    new_event['id'] =  str(uuid.uuid4()) 
     event = Event(new_event)
     result = asyncio.run(CreateEventUsecase(EventDatabase).execute(event))
 
@@ -62,20 +66,20 @@ def create_event():
     return jsonify(result), 201
 
 
-@app.route('/event/<string:id>', methods=['PATCH'])
-def update_event(id: str):
-    event = next((event for event in events if event["id"] == id), None)
-    if event:
-        updates = request.get_json()
-        event.update(updates)
-        return jsonify(event), 200
-    return jsonify({"error": "Event not found"}), 404
+@app.route('/event', methods=['PATCH'])
+def update_event():
+    event = request.get_json()
+    print(event)
+    result = asyncio.run(UpdateEventUseCase(EventDatabase).execute(event))
+    if 'error' in result:
+        return jsonify({"error": "Event not found"}), 404
+    return jsonify(result), 200
 
 
 @app.route('/event/<string:id>', methods=['DELETE'])
 def delete_event(id: str):
     result = asyncio.run(DeleteEventUseCase(EventDatabase).execute(id))
-    
+
     if 'error' in result:
         return jsonify({"error": "Event not found"}), 404
     return jsonify({"status": True}), 200
