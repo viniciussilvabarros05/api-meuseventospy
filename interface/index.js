@@ -58,12 +58,12 @@ function OpenModelCreateEvent(e){
 }
 
 function createEvent() {
-  let name = document.getElementById("event_name").innerText;
-  let day = document.getElementById("event_day").innerText;
-  let talks = document.getElementById("event_talks").innerText;
-  let dist = document.getElementById("event_dist").innerText;
-  let local = document.getElementById("event_local").innerText;
-  let data = JSON.stringify({ day, talks, dist, local, name });
+  let name = document.getElementById("event_name").value
+  let date = document.getElementById("event_day").value
+  let talks = document.getElementById("event_talks").value.split(",");;
+  let dist = document.getElementById("event_dist").value.split(",");;
+  let local = document.getElementById("event_local").value
+  let data = JSON.stringify({ date, talks, dist, local, name, userId: user.userId });
 
   fetch("http://localhost:3000/event", {
     method: "POST",
