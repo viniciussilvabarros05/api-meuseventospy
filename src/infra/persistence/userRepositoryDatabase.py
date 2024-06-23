@@ -29,15 +29,13 @@ class UserRepositoryDatabase(IUserRepository):
         except ValueError as e:
             return {"error": str(e)}
 
-    async def getById(self, id: str, ) -> User:
-        return self.__repository.find_unique(
+    async def getById(self, email: str, ) -> dict:
+        result = self.__repository.find_unique(
             where={
-                'id': id,
+                'email': email,
             },
-            include={
-                'event': True
-            }
         )
+        return result
 
     async def delete(self, id: str) -> None:
         return self.__repository.delete(id)

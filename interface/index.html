@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Meus Eventos</h1>
+      </div>
+    </header>
+    <main>
+      <div id="to_do">
+        <div>
+          <button id="button_create_event">Adicionar Evento</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome do evento</th>
+            <th>Data do evento</th>
+            <th>Palestrantes</th>
+            <th>Públicos alvo</th>
+            <th>Local do evento</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="list_events">
+
+        </tbody>
+      </table>
+      <div class="modal" style="display:none;" onclick="OpenModelCreateEvent()">
+        <form action="" >
+          <h2 id="modal_title">Novo Evento</h2>
+          <label>Nome do evento</label>
+          <input id="event_name" type="text" />
+
+          <label>Dia do evento</label>
+          <input id="event_day" type="date" />
+
+          <label>Palestrantes</label>
+          <input id="event_talks" />
+
+          <label>Públicos Alvo</label>
+          <input id="event_dist" />
+
+          <label>Local do Evento</label>
+          <input id="event_local" />
+
+          <button type="submit">Adicionar</button>
+        </form>
+      </div>
+      <div class="modal edit"></div>
+    </main>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

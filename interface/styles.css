@@ -1,0 +1,157 @@
+*{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+
+header{
+    width:100%;
+    padding: 0.8rem;
+    background-color: #458DFA;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    margin-bottom: 4rem;
+}
+header div{
+    width: 50%;
+    margin:auto;
+}
+
+header h1{
+    font-size: 1.5rem;
+    color: white;
+}
+
+
+main{
+    display:flex;
+    height:75vh;
+    overflow-y: auto;
+    width:55%;
+    margin:auto;
+    padding: 1rem;
+    align-items:center;
+    flex-direction:column;
+    justify-content:start;
+    box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+}
+
+#to_do{
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-bottom: 1px solid #d7d7d7;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+th{
+    padding: 1rem;
+}
+
+td{
+    max-width: 150px;
+    padding:0.5rem;
+    color: #474747;
+    border: none;
+    border-top: 1px solid #d7d7d7;
+    border-bottom: 1px solid #d7d7d7;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+
+
+.modal {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  align-items:center;
+  jutify-content:center;
+  position:absolute;
+  top:0;
+  left:0;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal.login{
+    display:flex;
+}
+.modal form{
+    display:flex;
+    flex-direction:column;
+    justify-content: start;
+    margin:auto;
+    width: 30vw;
+    height: auto;
+    
+    background-color:white;
+    padding: 2rem;
+    border-radius: 0.4rem;
+}
+
+.modal div label{
+    margin-bottom: 0.4rem;
+}
+
+.modal label{
+    color: #458DFA;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+button{
+    background-color: #458DFA;
+    height: 40px;
+    color:white;
+    cursor: pointer;
+    border: 1px solid;
+    padding: 0.4rem 2rem;
+    border-radius: 0.4rem;
+    transition: all 0.2s;
+}
+button:hover{
+    filter: brightness(0.8)
+}
+.modal input{
+    margin-bottom: 1rem;
+    height: 30px;
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.4rem;
+    border:none;
+    border: 1px solid #CACACA;
+    outline-color:#458DFA;
+    transition: all 0.5s;
+}
+.edit{
+    display: none;
+}
+.modal .buttons{
+    display:flex;
+    align-items:center;
+    gap: 2rem;
+    justify-content:center;
+    width: 100%;
+    flex-direction: row;
+}
+.buttons button{
+    width: 50%;
+}
+
+
+#modal_title{
+    margin-bottom: 2rem;
+    color: #646464;
+}
+
+@media only screen and (max-width: 1600px) {
+    th, td{
+        font-size: 0.8rem;
+    }
+
+  }

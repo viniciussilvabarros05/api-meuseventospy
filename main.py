@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from src.infra.persistence.eventsRepositoryDatabase import EventRepositoryDatabase
 from src.infra.persistence.userRepositoryDatabase import UserRepositoryDatabase
+from src.app.getUserByEmailUsecase import GetUserByEmailUseCase
 from src.app.getAllEventsUsecase import GetAllEventsUseCase
 from src.app.createUserUsecase import CreateUserUsecase
 from src.app.createEventUsecase import CreateEventUsecase
@@ -10,18 +11,22 @@ from src.app.updateEventUsecase import UpdateEventUseCase
 from src.core.entity.user import User
 from src.core.entity.event import Event
 from prisma import Prisma
+from flask_cors import CORS, cross_origin
 import asyncio
 import uuid
 
 app = Flask(__name__)
+CORS(app)
 db = Prisma()
 EventDatabase = EventRepositoryDatabase(db.event)
 UserDatabase = UserRepositoryDatabase(db.user)
 
-events = [
-    {"id": 1, "name": "Event 1"},
-    {"id": 2, "name": "Event 2"},
-]
+
+@app.route('/user/<string:email>', methods=['GET'])
+def login(email):
+    result = asyncio.run(GetUserByEmailUseCase(UserDatabase).execute(email))
+    print(result)
+    return jsonify(result.__dict__), 200
 
 
 @app.route('/user', methods=['POST'])
