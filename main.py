@@ -25,7 +25,7 @@ UserDatabase = UserRepositoryDatabase(db.user)
 @app.route('/user/<string:email>', methods=['GET'])
 def login(email):
     result = asyncio.run(GetUserByEmailUseCase(UserDatabase).execute(email))
-    print(result)
+    
     return jsonify(result.__dict__), 200
 
 
@@ -37,7 +37,7 @@ def create_user():
     id = str(uuid.uuid4())
     user = User(id,email, name)
     result = asyncio.run(CreateUserUsecase(UserDatabase).execute(user))
-
+    print(result)
     if len(result) > 0:
         return jsonify(result), 400
     return jsonify(result), 200

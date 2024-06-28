@@ -14,15 +14,14 @@ class UserRepositoryDatabase(IUserRepository):
                 raise ValueError("Nenhum dado fornecido")
 
             if not user.get_email():
-                raise ValueError("Email dado fornecido")
+                raise ValueError("Email não fornecido")
 
             if not user.get_name():
                 raise ValueError("Nome não fornecido")
 
-            self.__repository.create(data=user.get_user())
-            return {
-                "status": 200
-            }
+            result = self.__repository.create(data=user.get_user())
+            
+            return {"id": result.id, "email": result.email, "name": result.name}
 
         except UniqueViolationError as e:
             return {"error": str(e)},
