@@ -5,9 +5,9 @@ window.addEventListener("DOMContentLoaded", () => {
   let buttonCreateEvent = document.getElementById("button_create_event");
   let modal = document.querySelector(".modal");
   let modalEdit = document.querySelector(".modal.edit");
-  modal.addEventListener("click", OpenModelCreateEvent);
-  modalEdit.addEventListener("click", OpenModelEditEvent);
-  buttonCreateEvent.addEventListener("click", OpenModelCreateEvent);
+  modal.addEventListener("click", ToggleModelCreateEvent);
+  modalEdit.addEventListener("click", ToggleModelEditEvent);
+  buttonCreateEvent.addEventListener("click", ToggleModelCreateEvent);
   if (user.id) {
     getEvents(user.email);
   }else{
@@ -69,7 +69,7 @@ function createUser() {
   });
 }
 
-function OpenModelCreateEvent(e) {
+function ToggleModelCreateEvent(e) {
   let modal = document.querySelector(".modal");
   if (e.target.className == "modal") {
     return (modal.style.display = "none");
@@ -81,7 +81,7 @@ function OpenModelCreateEvent(e) {
     }
   }
 }
-function OpenModelEditEvent(e) {
+function ToggleModelEditEvent(e) {
   let modal = document.querySelector(".modal.edit");
   if (e.target.className == "modal edit") {
     return (modal.style.display = "none");
@@ -155,7 +155,7 @@ function UpdateEvent() {
   let talks = document.getElementById("event_talks_edit").value.split(",");
   let dist = document.getElementById("event_dist_edit").value.split(",");
   let local = document.getElementById("event_local_edit").value;
-  let modal = document.querySelector(".modal");
+  let modal = document.querySelector(".modal.edit");
   let data = JSON.stringify({
     date,
     talks,
@@ -209,25 +209,26 @@ function OpenModelEdit(event) {
   modal.style.display = "flex";
   currentEvent = event;
   event.date = formatDate(event.date);
-  console.log(event)
+  event.talks = event.talks.join(',')
+  event.dist = event.dist.join(',')
   modal.innerHTML = `
       <form>
           <h2 id="modal_title">Novo Evento</h2>
 
           <label>Nome do evento </label>
-          <input type="text" id="event_name_edit" value=${event.name} />
+          <input type="text" id="event_name_edit" value="${event.name}" />
 
           <label>Dia do evento</label>
-          <input type="date" id="event_day_edit"  value=${event.date} />
+          <input type="date" id="event_day_edit"  value="${event.date}" />
 
           <label>Palestrantes</label>
-          <input id="event_talks_edit"  value=${event.talks.toString()} />
+          <input id="event_talks_edit" type="text" value="${event.talks}" />
 
           <label>Públicos Alvo</label>
-          <input id="event_dist_edit"  value=${event.dist.toString()} />
+          <input id="event_dist_edit" type="text" value="${event.dist}" />
 
           <label>Local do Evento</label>
-          <input id="event_local_edit"  value=${event.local} />
+          <input id="event_local_edit" type="text"  value="${event.local}" />
 
           <div class="buttons">
               <button type="button" style="background-color: #f48955" onclick="DeleteEvent()">Excluir</button>

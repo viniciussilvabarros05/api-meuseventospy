@@ -95,6 +95,13 @@ td{
     padding: 2rem;
     border-radius: 0.4rem;
 }
+form a{
+    color: #458DFA;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
 
 .modal div label{
     margin-bottom: 0.4rem;
