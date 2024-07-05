@@ -2,6 +2,7 @@
 ## Dependências
 
   -flask
+  
   -flask-cors
 
 ## Instalação
