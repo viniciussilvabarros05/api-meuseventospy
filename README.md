@@ -12,7 +12,7 @@
 ## Forma de Utilizar
   Na raiz do projeto, faça: 
   
-  `pip main.py`
+  `py main.py`
 
   Assim, a api será rodada localmente na porta 3000.
 
