@@ -1,4 +1,9 @@
 
+## Dependências
+
+  -flask
+  -flask-cors
+
 ## Instalação
   - Faça a instalação de todas as bibliotecas do Requirements.txt com o comando:
   `pip install -r requirements.txt`
